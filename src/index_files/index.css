@@ -2,38 +2,111 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   margin: auto;
-  
+  background-color: rgb(57, 64, 67);
 }
 
-.accordion {
-  background-color: #eee;
-  color: #444;
-  cursor: pointer;
-  z-index: 100;
-  border: none;
-  outline: none;
-  transition: 0.4s;
-  position:absolute;
-  top:0;
-  right:0;
-  width: 20px;
-  height: 20px;
+input {
+  background: transparent;
+}
+button {
+  background-color: rgb(60, 60, 60);
+  color: rgb(148, 148, 148);
+  border: 1px solid black;
+  border-radius: 5px;
+  user-select: none;
+}
+button:active {
+  color: rgb(197, 72, 72);
+}
+#listBtn {
+  margin: 10px;
 }
 
-
-.active, .accordion:hover {
-  background-color: #ccc;
+.add-btn {
+  display: flex;
+  margin-top: 10px;
+}
+.btn {
+  margin: 1px;
 }
 
-.panel {
-  padding: 0 18px;
-  margin: 0;
-  background-color: white;
+.hide {
   display: none;
-  overflow: hidden;
+}
 
+.tittle-block {
+  display: flex;
+}
+.name-block {
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  width: 108px;
   
+}
+
+.save-options-btn {
+  position: relative;
+  left: 49%;
+  width: 50px;
+}
+
+.btns-selection-function {
+  margin-top: -5px;
+  width: 200px;
+}
+.btns-selection-function button {
+  height: 14px;
+  border-radius: 0;
+  font-size: 10px;
+  width: 100px;
+  margin-bottom: 3px;
+}
+.options-block {
+  padding: 4px;
+  width: 200px;
+  position: absolute;
+
+
+  border: 1px solid black;
+  border-radius: 5px;
+  z-index: 100;
+  background-color: rgb(73, 84, 80);
+}
+.options-block input {
+  width: 193px;
+  display: block;
+  margin: 2px 0px;
+}
+.block {
+  margin-bottom: 15px;
+}
+.selected {
+  background-color: rgb(42, 41, 41);
+}
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.btn-add-block {
+  margin-left: 10px;
+}
+.name-block:active {
+  color:rgb(197, 72, 72);
+} 
+/* .btn-of-block {
+  white-space: nowrap;
+} */
+.editor-enable-btn {
+  position:absolute;
+  right:0;
   top:0;
-  background-color: rgb(187, 183, 183);
-  width: 100%;
+  z-index: 100;
+}
+
+.wrapper-name-block {
+  border-bottom: 1px solid rgb(31, 14, 14);
+  margin: 0px 3px;
 }

@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const url = require('url')
 
 let mainWindow;
 const createWindow = () => {
@@ -10,12 +11,21 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: false,
-      preload: path.join(__dirname, './src/preload.js'),
+      webSecurity: false,
+      //preload: path.join(__dirname, './src/preload.js'),
     },
   });
 
   mainWindow.loadFile(path.join(__dirname, '/src/index.html'));
-  
+  // mainWindow.loadURL(
+  //   url.format({
+  //     pathname: path.join(__dirname, '/src/index.html'),
+  //     protocol: "file:",
+  //     slashes: true
+  //   })
+  // );
+
+  mainWindow.setMenu(null);
   mainWindow.webContents.openDevTools();
 
 
@@ -41,20 +51,20 @@ app.on('activate', () => {
   }
 });
 // Сохранение страницы
-// app.on('web-contents-created', (_, wc) => {
+app.on('web-contents-created', (_, wc) => {
 
-//   wc.on('dom-ready', () => {
+  wc.on('dom-ready', () => {
 
-//     wc.on('console-message', () => {
-//         const filepathlocal = path.join(__dirname, './src/index.html');
-//         wc.savePage(filepathlocal, 'HTMLComplete').then(()=> {
-//           console.log('save page');
-//         }).catch(err => {
-//           console.log(err);
-//         })
-//     })
-//   })    
-// });
+    wc.on('console-message', () => {
+        const filepathlocal = path.join(__dirname, './src/index.html');
+        wc.savePage(filepathlocal, 'HTMLComplete').then(()=> {
+          console.log('save page');
+        }).catch(err => {
+          console.log(err);
+        })
+    })
+  })    
+});
 
 
 

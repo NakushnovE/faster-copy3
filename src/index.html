@@ -1,40 +1,28 @@
 <!DOCTYPE html>
 <!-- saved from url=(0076)file:///Users/evg/Documents/Projects/JS/FastCopy/faster-copy3/src/index.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <title>Hello World!</title>
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" type="text/css" href="./index_files/index.css" media="screen">
   </head>
   <body>
-    <div class="block-options">
-      <button class="accordion active">^</button>
-      <div class="panel" style="display: block;">
-        <div>
-          <input id="input-block">
-          <button id="save-block">Add Block</button>
-        </div>
-      </div>
+
+    <div class="block-edit-btn">
+      <button class="editor-enable-btn" onclick="changeSwitcher()">Edit</button>
     </div>
-    
     <div id="listBtn">   
-    <div class="block">3<div class="add-btn"><button>+</button></div></div></div>
-
-
-
-    <div class="modal">
-      <div class="modaldialog">
-          <div class="modalcontent">
-              <form action="#">
-                  <div data-close class="modalclose">&times;</div>
-                  <div class="modaltitle">Мы свяжемся с вами как можно быстрее!</div>
-                  <input required placeholder="Ваше имя" name="name" type="text" class="modalinput">
-                  <input required placeholder="Ваш номер телефона" name="phone" type="phone" class="modalinput">
-                  <button class="btn btn_dark btn_min">Перезвонить мне</button>
-              </form>
-          </div>
-      </div>
+    
+  
+    <div>
+      <button class="btn-add-block" onclick="newBlock()">Add Block</button>
     </div>
-      <script src="./index.js"></script>
+
+
+
+      
   
 
-</body></html>
+
+<script src="./index_files/index.js"></script></body></html>
