@@ -1,5 +1,11 @@
 
-// window.addEventListener('DOMContentLoaded', () => {
+
+
+const { ipcRenderer, webContents, BrowserWindow } = require("electron");
+
+ 
+//let win = BrowserWindow.getFocusedWindow();
+
 
 let switcher = true;
 const copyText = (text) => {
@@ -312,4 +318,21 @@ function resizeInput() {
 	this.style.width = ((this.value.length) * 11) + 'px';
   }
 
-// })
+
+
+  const savePage = () => {
+	const xxx = document.documentElement.outerHTML;
+	//console.log(xxx);
+	//console.log("save page 3");
+	ipcRenderer.send('save-page', webContents);
+
+
+	// let file = new File([document.documentElement.outerHTML]
+	// 	, "file-" + new Date().getTime() + ".html"
+	// 	, {type:"text/html", lastModified:new Date().getTime()});
+	// 	console.log(file);
+  }
+ipcRenderer.on('save renderer', message => {
+	console.log("save renderer");
+})
+  
