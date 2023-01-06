@@ -3,6 +3,8 @@ const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const path = require('path');
 const url = require('url')
 
+
+
 let mainWindow;
 //let wc;
 const createWindow = () => {
@@ -18,7 +20,9 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.loadFile(path.join(__dirname, '1/index.html'));
+
+
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
   // mainWindow.loadURL(
   //   url.format({
   //     pathname: path.join(__dirname, '/src/index.html'),
@@ -31,8 +35,16 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 
 
+// mainWindow.webContents.on('dom-ready', () => {
+//   let getStore = localStorage.getItem('page')
+//   if(getStore) {  
+//     let parent = document.getElementById('listBtn');
+//     let doc = new DOMParser().parseFromString(getStore, 'text/xml');
+//     parent.appendChild(doc)
+//   }
+// })
   //wc = mainWindow.webContents;
-mainWindow.on('')
+//mainWindow.on('')
 
 
 };
@@ -87,19 +99,20 @@ app.on('activate', () => {
 // })
 
 
-// ipcMain.on("save-page", (e, data) => {
-//   const filepathlocal = path.join(__dirname, '1/index.html');
-//   // console.log("MAIN", "e.sender");   
+ipcMain.on("save-page", (e, data) => {
+  const filepathlocal = path.join(__dirname, '1/index.html');
+  // console.log("MAIN", "e.sender");   
  
-//   e.sender.savePage(filepathlocal, 'HTMLComplete').then(()=> {
-//     console.log('save page');        
-//     e.sender.send('save renderer', "save renderer")
-//   }).catch(err => {
-//     console.log(err);
-//     console.log("Не удалось сохранить файл");
-//   })
+  e.sender.savePage(filepathlocal, 'HTMLComplete').then(()=> {
+    console.log('save page');        
+    e.sender.send('save renderer', "save renderer")
+  
+  }).catch(err => {
+    console.log(err);
+    console.log("Не удалось сохранить файл");
+  })
 
-// })
+})
 
 
 

@@ -321,18 +321,20 @@ function resizeInput() {
 
 
   const savePage = () => {
-	const xxx = document.documentElement.outerHTML;
-	//console.log(xxx);
-	//console.log(win);
+	const parentBlock = document.querySelector('#listBtn');
+	const contentBlock = parentBlock.outerHTML.toString().slice(18, -6);
 	ipcRenderer.send('save-page', webContents);
-
-
-	// let file = new File([document.documentElement.outerHTML]
-	// 	, "file-" + new Date().getTime() + ".html"
-	// 	, {type:"text/html", lastModified:new Date().getTime()});
-	// 	console.log(file);
+	localStorage.setItem('page', contentBlock);
   }
 
+
+  const loadPage = () => {
+	let getStore = localStorage.getItem('page')
+	if(getStore) {  
+		let parent = document.getElementById('listBtn');
+		parent.innerHTML = getStore
+	}
+  }
 
   //electron-builder --mac
   
