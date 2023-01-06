@@ -1,6 +1,5 @@
 
 
-
 const { ipcRenderer, webContents, BrowserWindow } = require("electron");
 
  
@@ -25,7 +24,12 @@ const hideBlock = (target) => {
 		})	
 	}
 }
-
+// Save in Store
+const saveStore = () => {
+	const parentBlock = document.querySelector('#listBtn');
+	const contentBlock = parentBlock.outerHTML.toString().slice(18, -6);
+	ipcRenderer.send('save-store', contentBlock);
+  }
 
 // Create block
 const newBlock = () => {
@@ -65,6 +69,7 @@ const newBlock = () => {
 
 	newBlock.appendChild(createBtn);
 	newBlock.appendChild(btn);
+	saveStore();
 };
 
 // add Btn
@@ -74,6 +79,7 @@ document.addEventListener('click',e => {
 		//addBtn(target)
 		createElement(target)
 		console.log('added btn');
+		saveStore();
 	}
 	
 });
@@ -165,6 +171,7 @@ document.addEventListener('click',e => {
 	}
 	if(target.classList.contains('name-block')) {
 		hideBlock(target);
+		saveStore();
 	}
 });
 
@@ -216,26 +223,29 @@ const saveOptionsBtn = (target) => {
 	if(selectedFunction.classList.contains('btn-select-link')) {
 		btn.setAttribute("onClick", `link("${inputOptionsBtn}")`)
 	}
-	console.log(inputOptionsBtn);
+	console.log(inputOptionsBtn);	
 	closeOptions()
+	saveStore()
 }
 
 //Delete Btn
 const deleteButton = (parent) => {
 	const blockElem = parent.closest('.block-elem');
 	blockElem.remove();
+	saveStore();
 }
 const deleteBlock = (parent) => {
 	const block = parent.closest('.block');
 	block.remove();
+	saveStore();
 }
 
 
 const changeNameBtn = (target) => {
 	target.removeAttribute('readonly', true);
-	target.classList.add('wrapper-name-block');
-	
+	target.classList.add('wrapper-name-block');	
 	setWidthInput(target)
+
 };
 // Select function
 const selectFunction = (target) => {
@@ -255,7 +265,8 @@ document.addEventListener('click', e => {
 	let target = e.target;
 	if(switcher == true) {
 		if(target.classList.contains('name-block')) {
-			changeNameBtn(target)
+			changeNameBtn(target);
+			saveStore();
 			if(!target.getAttribute('readonly')) {
 				target.addEventListener("keydown", function (e) {
 					if (e.code === "Enter") { 
@@ -282,6 +293,7 @@ const changeDisplay = (target) => {
 	let block = target.closest('.block');
 	let btnOfBlock = block.querySelector('.btn-of-block');
 	btnOfBlock.classList.toggle('flex');
+	saveStore();
 }
 
 
@@ -320,21 +332,16 @@ function resizeInput() {
 
 
 
-  const savePage = () => {
-	const parentBlock = document.querySelector('#listBtn');
-	const contentBlock = parentBlock.outerHTML.toString().slice(18, -6);
-	ipcRenderer.send('save-page', webContents);
-	localStorage.setItem('page', contentBlock);
-  }
+ 
 
 
-  const loadPage = () => {
-	let getStore = localStorage.getItem('page')
-	if(getStore) {  
-		let parent = document.getElementById('listBtn');
-		parent.innerHTML = getStore
-	}
-  }
+  ipcRenderer.on('load-store', (_, data) => {
+	console.log('LOAD Render:', typeof(data) );
+	let parent = document.getElementById('listBtn');
+	parent.innerHTML = data
+	
+})
+
 
   //electron-builder --mac
   

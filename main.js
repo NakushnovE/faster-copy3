@@ -2,11 +2,13 @@ const { log } = require('console');
 const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const path = require('path');
 const url = require('url')
+const Store = require('electron-store');
 
-
+const store = new Store();
 
 let mainWindow;
 //let wc;
+
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -34,20 +36,15 @@ const createWindow = () => {
   mainWindow.setMenu(null);
   mainWindow.webContents.openDevTools();
 
+  let block = store.get('block');
 
-// mainWindow.webContents.on('dom-ready', () => {
-//   let getStore = localStorage.getItem('page')
-//   if(getStore) {  
-//     let parent = document.getElementById('listBtn');
-//     let doc = new DOMParser().parseFromString(getStore, 'text/xml');
-//     parent.appendChild(doc)
-//   }
-// })
-  //wc = mainWindow.webContents;
-//mainWindow.on('')
-
+  mainWindow.webContents.on('dom-ready', () => {
+    mainWindow.webContents.send('load-store', block)
+  })
 
 };
+
+
 
 app.on('ready', createWindow);
 
@@ -98,21 +95,9 @@ app.on('activate', () => {
 //   })
 // })
 
+//console.log(store.get('block'));
 
-ipcMain.on("save-page", (e, data) => {
-  const filepathlocal = path.join(__dirname, '1/index.html');
-  // console.log("MAIN", "e.sender");   
- 
-  e.sender.savePage(filepathlocal, 'HTMLComplete').then(()=> {
-    console.log('save page');        
-    e.sender.send('save renderer', "save renderer")
-  
-  }).catch(err => {
-    console.log(err);
-    console.log("Не удалось сохранить файл");
-  })
-
+ipcMain.on("save-store", (_, data) => {
+  store.set('block', data)
+  console.log('MAIN: block saved');
 })
-
-
-
