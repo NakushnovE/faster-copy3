@@ -1,37 +1,34 @@
 
+const { ipcRenderer } = require("electron");
 
-const { ipcRenderer, webContents, BrowserWindow } = require("electron");
-
- 
-//let win = BrowserWindow.getFocusedWindow();
-
-
-let switcher = true;
+let draggables = null; 
+let containers = null;
+let switchEditor = document.querySelector('.switch-input').checked;
+console.log(switchEditor);
 const copyText = (text) => {
-	console.log(text);
     navigator.clipboard.writeText(text)
 };
 const link = (url) => {
     window.open(url).focus
 }
 const hideBlock = (target) => {
-	let block = target.closest('.block');
-	let blockElem = block.querySelectorAll('.block-elem');
-	console.log(switcher);
-	if(switcher == false) {		
-		blockElem.forEach(elem => {
-			elem.classList.toggle('hide');
-		})	
-	}
-}
-// Save in Store
+	const block = target.closest('.block');
+	const blockElem = block.querySelectorAll('.block-elem');
+	const btnOfBlocks = block.querySelectorAll('.btn-of-block');
+	btnOfBlocks.forEach(block => {
+		block.classList.toggle('h')
+		block.classList.toggle('hide')
+	});
+
+};
+
+
 const saveStore = () => {
-	const parentBlock = document.querySelector('#listBtn');
-	const contentBlock = parentBlock.outerHTML.toString().slice(18, -6);
-	ipcRenderer.send('save-store', contentBlock);
+	const getBody = document.querySelector('#body');
+	const contBody = getBody.outerHTML.toString().slice(16, -7);
+	ipcRenderer.send('save-store', contBody);	
   }
 
-// Create block
 const newBlock = () => {
 	let parentElement = document.getElementById('listBtn');
 
@@ -41,53 +38,62 @@ const newBlock = () => {
 	let tittleBlock = newBlock.appendChild(document.createElement('div'));
 	tittleBlock.classList.add('tittle-block');
 
+	
+	let wrapperNameBlock = tittleBlock.appendChild(document.createElement('div'));
+	wrapperNameBlock.classList.add('wrapper-name-block');
+	let nameBlockInput = wrapperNameBlock.appendChild(document.createElement('input'));
+	nameBlockInput.classList.add('name-block-input');
+	nameBlockInput.classList.add('hide-edit-name-block');
+
+	let nameBlock = wrapperNameBlock.appendChild(document.createElement('div'));
+	nameBlock.classList.add('name-block');
+	nameBlock.innerText = 'Name Block'
+
+
+
+	let btnEditNameBlock = tittleBlock.appendChild(document.createElement('button'));
+	btnEditNameBlock.classList.add('btn-edit-name-block');
+	btnEditNameBlock.setAttribute('id', 'enb');
+
 	let btnDisplayBlock = tittleBlock.appendChild(document.createElement('button'));
 	btnDisplayBlock.classList.add('btn-display-block');
-	btnDisplayBlock.innerText = 'D';
-
-
-
-	let wrapperNameBlock = tittleBlock.appendChild(document.createElement('div'));
-	//wrapperNameBlock.classList.add('wrapper-name-block');
-	let nameBlock = wrapperNameBlock.appendChild(document.createElement('input'));
-	nameBlock.classList.add('name-block');
-	nameBlock.setAttribute('value', 'New Block');
-	nameBlock.setAttribute('readonly', true);
+	btnDisplayBlock.setAttribute('id', 'disp');
 
 	let btnDeleteBlock = tittleBlock.appendChild(document.createElement('button'));
 	btnDeleteBlock.classList.add('btn-delete-block');
-	btnDeleteBlock.innerText = 'x';
+	btnDeleteBlock.setAttribute('id', 'x');
 	
 	parentElement.appendChild(newBlock);
 
 	let createBtn = document.createElement('div');
 	createBtn.classList.add('btn-of-block');
+	addListenerToCont(createBtn)
 
 	let btn = document.createElement('button');
 	btn.classList.add('add-btn');
-	btn.innerText = '+';
+	btn.setAttribute('id', 'ab');
 
 	newBlock.appendChild(createBtn);
 	newBlock.appendChild(btn);
+
 	saveStore();
 };
 
-// add Btn
+
 document.addEventListener('click',e => {
 	let target = e.target
-	if(target.innerText == '+') {
-		//addBtn(target)
+	if(target.id == 'ab') {
 		createElement(target)
-		console.log('added btn');
 		saveStore();
-	}
-	
+	}	
 });
 
 
 function createElement(parent) {
 	const elem = document.createElement('div');
-	elem.classList.add('block-elem')
+	elem.classList.add('block-elem');
+	elem.setAttribute('draggable', 'true');
+	addListenerToBtn(elem);
 
     const btn = elem.appendChild(document.createElement('button'));
 	const optionsBlock = elem.appendChild(document.createElement('div'));
@@ -99,10 +105,11 @@ function createElement(parent) {
 	inputNameBtn.setAttribute("placeholder", "Name button");
 	
 	
-
 	btn.classList.add('btn');
     btn.setAttribute("onClick", "copyText('text in the clipboard')");
     btn.innerText = 'New button';
+	
+
 
 	let block = parent.closest('.block');
 	let btnsBlock = block.querySelector('.btn-of-block')
@@ -131,58 +138,75 @@ function createElement(parent) {
 			const deleteBtn = btnsAction.appendChild(document.createElement('button'));
 			deleteBtn.classList.add('delete-btn');
 			deleteBtn.innerText = "Delete";
+			deleteBtn.setAttribute('id', 'db');
 			const saveOptionsBtn = btnsAction.appendChild(document.createElement('button'));
 			saveOptionsBtn.classList.add('save-options-btn');
 			saveOptionsBtn.innerText = "Save";
-
-
-	
-	
+			saveOptionsBtn.setAttribute('id', 'sob');
 
 };
 
-// Listener
 document.addEventListener('click',e => {
 	let target = e.target;
-	//let allOptionsBlock = document.querySelectorAll('.options-block');
-	if(target.innerText == 'Save') {		
+	if(target.id == 'sob') {		
 		saveOptionsBtn(target);
-	} else if(target.innerText == 'Delete') { //заменить
+	} else if(target.id == 'db') {
 		deleteButton(target);
-	} else if(target.innerText == 'x') {   //заменить
-		deleteBlock(target);
 	} else if(target.classList.contains('btn-select-link') || target.classList.contains('btn-select-copy')) {
 		selectFunction(target);
 	} else if(!target.closest('.options-block')) {
 		closeOptions();
-	} else if(true) {
-		console.log("1");
-		//changeDisplay(target)
+	}
+});
+const removeDel = () => {
+	const elements = document.querySelectorAll('.del');
+	elements.forEach(elem => {
+		elem.classList.remove('del')
+	})
+};
+document.addEventListener('click', e => {
+	if(e.target.id == 'x') {
+		e.target.classList.add('del')
+		e.target.addEventListener('click', function delBlock(e) {
+			if(e.target.classList.contains('del')) {
+				deleteBlock(e.target)
+			} 
+			if(!e.target) {
+				e.target.classList.remove('del')
+			}
+			e.target.removeEventListener('click', delBlock)
+		})
+	} else {
+		removeDel();
+	}
+})
+
+document.addEventListener('click', e => {
+	let target = e.target;
+	let switchEditor = document.querySelector('.switch-input').checked;
+	if(target.classList.contains('btn-display-block')) {
+		changeDisplay(target);
+	}
+	if(target.classList.contains('name-block')) {
+		if(!switchEditor) {
+			hideBlock(target);
+			saveStore();
+		}
 		
 	}
 });
 
-document.addEventListener('click',e => {
-	let target = e.target;
-
-	if(target.classList.contains('btn-display-block')) {
-		changeDisplay(target)
-		//почему отдельно слушатель 
-	}
-	if(target.classList.contains('name-block')) {
-		hideBlock(target);
-		saveStore();
-	}
-});
-
-
 const closeOptions = () => {
-	let allOptionsBlock = document.querySelectorAll('.options-block');
+	const allOptionsBlock = document.querySelectorAll('.options-block');
+	const allBtns = document.querySelectorAll('.btn');
 	allOptionsBlock.forEach( btn => {
-		btn.classList.add('hide')
+		btn.classList.add('hide');		
+	});
+	allBtns.forEach(btn => {
+		btn.classList.remove('btn-has-options-open');
 	})
 };
-// Open options
+
 const openOptions = (target) => {
 	let allOptionsBlock = document.querySelectorAll('.options-block');	
 	if(target.classList.contains('btn')) {	
@@ -190,45 +214,52 @@ const openOptions = (target) => {
 		let optionsBlock = blockElem.querySelector('.options-block');	
 		allOptionsBlock.forEach( btn => {
 			if(btn == optionsBlock) {
-				btn.classList.remove('hide')
+				btn.classList.remove('hide');
+				target.classList.add('btn-has-options-open');
 			} else if(!btn.classList.contains('hide') && btn != optionsBlock) {
-				btn.classList.add('hide')
+				btn.classList.add('hide');
 			}		
 		})
 	} else if(!target.closest('.options-block')) {
 		allOptionsBlock.forEach( btn => {
-			btn.classList.add('hide')
+			btn.classList.add('hide');
 		})
-	}	
-}
+	};
+};
 
 document.addEventListener('contextmenu', e => {
-	let target = e.target;
-	openOptions(target)
+	let target = e.target
+	if(target.classList.contains('btn')) {
+		openOptions(target);
+		document.addEventListener('contextmenu', function x(e) {
+			if(e.target !== target) {   
+				closeOptions();
+			}
+			document.removeEventListener('contextmenu', x)
+		})
+	}
+	
 })
 
-// Save Btn 
 const saveOptionsBtn = (target) => {
 	let optionsBlock = target.closest('.options-block');
 	let inputNameBtn = optionsBlock.querySelector('.input-name-btn').value;
 	let inputOptionsBtn = optionsBlock.querySelector('.option').value;
-	let selectedFunction = optionsBlock.querySelector('.selected');
-	
+	let selectedFunction = optionsBlock.querySelector('.selected');	
 	let btn = optionsBlock.previousSibling;
-	btn.innerText = inputNameBtn;
-
-	if(selectedFunction.classList.contains('btn-select-copy')) {
-		btn.setAttribute("onClick", `copyText("${inputOptionsBtn}")`);
+	if(inputNameBtn !== "" && inputOptionsBtn !== "") {
+		btn.innerText = inputNameBtn;
+		if(selectedFunction.classList.contains('btn-select-copy')) {
+			btn.setAttribute("onClick", `copyText("${inputOptionsBtn}")`);
+		}
+		if(selectedFunction.classList.contains('btn-select-link')) {
+			btn.setAttribute("onClick", `link("${inputOptionsBtn}")`)
+		}
 	}
-	if(selectedFunction.classList.contains('btn-select-link')) {
-		btn.setAttribute("onClick", `link("${inputOptionsBtn}")`)
-	}
-	console.log(inputOptionsBtn);	
-	closeOptions()
-	saveStore()
+	closeOptions();
+	saveStore();	
 }
 
-//Delete Btn
 const deleteButton = (parent) => {
 	const blockElem = parent.closest('.block-elem');
 	blockElem.remove();
@@ -240,14 +271,63 @@ const deleteBlock = (parent) => {
 	saveStore();
 }
 
-
 const changeNameBtn = (target) => {
-	target.removeAttribute('readonly', true);
-	target.classList.add('wrapper-name-block');	
-	setWidthInput(target)
-
+	if(target.classList.contains('name-block-input')) {
+		const parent = target.closest('.wrapper-name-block');
+		const nameBlock = parent.querySelector('.name-block');
+		if(target.value !== "") {
+			nameBlock.innerText = target.value;
+			saveStore();
+		}
+		
+	}
+	
 };
-// Select function
+let isVisibleInput;
+const editNameBlock = (target) => {
+	const parent = target.closest('.tittle-block');
+	const nameBlock = parent.querySelector('.name-block');
+	const nameBlockInput = parent.querySelector('.name-block-input');
+	const btnEditNameBlock = parent.querySelector('.btn-edit-name-block');
+	const btnDisplayBlock = parent.querySelector('.btn-display-block');
+	const btnDeleteBlock = parent.querySelector('.btn-delete-block');
+
+	nameBlock.classList.add('hide-edit-name-block');
+	btnEditNameBlock.classList.add('hide-edit-name-block');
+	btnDisplayBlock.classList.add('hide-edit-name-block');
+	btnDeleteBlock.classList.add('hide-edit-name-block');
+	nameBlockInput.classList.remove('hide-edit-name-block');
+	nameBlockInput.focus();
+	isVisibleInput = nameBlockInput;
+}
+const closeEditNameBlock = () => {
+	const nameBlock = document.querySelectorAll('.name-block');
+	const nameBlockInput = document.querySelectorAll('.name-block-input');
+	const btnEditNameBlock = document.querySelectorAll('.btn-edit-name-block');
+	const btnDisplayBlock = document.querySelectorAll('.btn-display-block');
+	const btnDeleteBlock = document.querySelectorAll('.btn-delete-block');
+
+	nameBlock.forEach((el) => {
+			el.classList.remove('hide-edit-name-block');
+		});
+	nameBlockInput.forEach((el) => {
+		el.classList.add('hide-edit-name-block');
+	});
+	btnEditNameBlock.forEach((el) => {
+		el.classList.remove('hide-edit-name-block');
+	});
+	btnDisplayBlock.forEach((el) => {
+		el.classList.remove('hide-edit-name-block');
+	});
+	btnDeleteBlock.forEach((el) => {
+		el.classList.remove('hide-edit-name-block');
+	});
+
+	isVisibleInput = false;
+};
+
+
+
 const selectFunction = (target) => {
 	let parent = target.closest('.btns-selection-function');
 	let btnCopy = parent.querySelector('.btn-select-copy');
@@ -261,32 +341,58 @@ const selectFunction = (target) => {
 	}			
 }
 
-document.addEventListener('click', e => {
-	let target = e.target;
-	if(switcher == true) {
-		if(target.classList.contains('name-block')) {
-			changeNameBtn(target);
-			saveStore();
-			if(!target.getAttribute('readonly')) {
-				target.addEventListener("keydown", function (e) {
-					if (e.code === "Enter") { 
-						target.setAttribute('readonly', true);
-						//target.style.setProperty('outline', 'none');
-						target.classList.remove('wrapper-name-block');
-					}
-				});
-				document.addEventListener('click', function (e) {
-					if( e.target !== target ) {
-						target.setAttribute('readonly', true);
-						//target.style.setProperty('outline', 'none');
-						target.classList.remove('wrapper-name-block');
-					}
-				})
+function closeInputClick(e) {
+	document.addEventListener('click', function x() {
+		if(!e.target.classList.contains('name-block-input')) {
+			closeEditNameBlock();
+		};
+		document.removeEventListener('click', x)
+	})
+}
+
+document.addEventListener('click', function clickEditNameBlock(e) {
+	if(e.target.classList.contains('btn-edit-name-block')) {
+		editNameBlock(e.target);
+		changeNameBtn(e.target);
+		document.addEventListener('click', function clickOutInputAfterClickBtnEdit(e) {
+			if(isVisibleInput) {
+				if(e.target !== isVisibleInput) {
+					changeNameBtn(isVisibleInput);
+					closeEditNameBlock();					
+				}
 			}
-		};	
+			this.removeEventListener('click', clickOutInputAfterClickBtnEdit)
+			this.removeEventListener('click', clickEditNameBlock)
+			document.addEventListener('click', clickEditNameBlock)
+		});
+		document.addEventListener('keypress', function clickEnter(e) {			
+			if (e.code === "Enter") {				
+				if(isVisibleInput) {	
+						changeNameBtn(isVisibleInput);
+						closeEditNameBlock();										
+				};				
+			};			
+			this.removeEventListener('click', clickEnter);
+			this.removeEventListener('click', clickEditNameBlock);
+			document.addEventListener('click', clickEditNameBlock);
+		})
+	};
+	if(e.target.classList.contains('name-block-input')) {
+		document.addEventListener('click', function clickOutInputFromInput(e) {
+			
+				if(e.target !== isVisibleInput) {
+					if(isVisibleInput) {
+						changeNameBtn(isVisibleInput);
+					}
+					
+					closeEditNameBlock();					
+				};	
+			this.removeEventListener('click', clickOutInputFromInput);
+			this.removeEventListener('click', clickEditNameBlock);
+			document.addEventListener('click', clickEditNameBlock);			
+		});
 	}
-	
-})
+});
 
 
 const changeDisplay = (target) => {
@@ -297,50 +403,146 @@ const changeDisplay = (target) => {
 }
 
 
-//возможность редактированрия только при включенной кнопке
 const changeSwitcher = () => {	
-	switcher = switcher == false? true: false;
-	console.log(switcher);
-	
-	let btnsAddBtn = document.querySelectorAll('.add-btn');
-	btnsAddBtn.forEach((btn) => {
-		btn.classList.toggle('hide')
-	});
-	let btnsDelBlock = document.querySelectorAll('.btn-delete-block');
-	btnsDelBlock.forEach((btn) => {
-		btn.classList.toggle('hide')
-	});
-
-	let btnsDisplayBlock = document.querySelectorAll('.btn-display-block');
-	btnsDisplayBlock.forEach((btn) => {
-		btn.classList.toggle('hide')
-	});
+	let switchEditor = document.querySelector('.switch-input').checked;
+	const btnsAddBtn = document.querySelectorAll('.add-btn');
+	const btnsDelBlock = document.querySelectorAll('.btn-delete-block');
+	const btnsDisplayBlock = document.querySelectorAll('.btn-display-block');
+	const btnsEditNameBlock = document.querySelectorAll('.btn-edit-name-block');
 	const btsAddBlock = document.querySelector('.btn-add-block');
-	btsAddBlock.classList.toggle('hide')
-	
-	
+	const btnOfBlock = document.querySelectorAll('.btn-of-block.h');
+
+	if(switchEditor) {
+		btnsAddBtn.forEach((btn) => {
+			btn.classList.remove('hide')
+		});
+		btnsDelBlock.forEach((btn) => {
+			btn.classList.remove('hide')
+		});
+		btnsDisplayBlock.forEach((btn) => {
+			btn.classList.remove('hide')
+		});
+		btnsEditNameBlock.forEach((btn) => {
+			btn.classList.remove('hide')
+		});
+		btnOfBlock.forEach(btn => {
+			btn.classList.remove('hide');
+		})
+		btsAddBlock.classList.remove('hide');
+
+	} else {
+		btnsAddBtn.forEach((btn) => {
+			btn.classList.add('hide')
+		});
+		btnsDelBlock.forEach((btn) => {
+			btn.classList.add('hide')
+		});
+		btnsDisplayBlock.forEach((btn) => {
+			btn.classList.add('hide')
+		});
+		btnsEditNameBlock.forEach((btn) => {
+			btn.classList.add('hide')
+		});
+		btnOfBlock.forEach(btn => {
+			btn.classList.add('hide');
+		})
+
+		btsAddBlock.classList.add('hide');
+
+	}
 }
-const setWidthInput = (target) => {
-	target.addEventListener('input', resizeInput);
-	resizeInput.call(target);
-
-}
-function resizeInput() {
-	//this.style.width = this.value.length + "ch";
-	this.style.width = ((this.value.length) * 11) + 'px';
-  }
 
 
-
- 
 
 
   ipcRenderer.on('load-store', (_, data) => {
-	console.log('LOAD Render:', typeof(data) );
-	let parent = document.getElementById('listBtn');
-	parent.innerHTML = data
-	
+	console.log('LOAD');
+	let body = document.getElementById('body');
+	body.innerHTML = data;
+	dragAndDrop();
+	changeSwitcher();
 })
+
+
+
+const addListenerToBtn = (elem) => {
+	elem.addEventListener('dragstart', function dragStart (e){
+			draggingItem = elem
+			elem.classList.add('dragging');
+		});
+	elem.addEventListener('dragend', function dragEnd (e){
+			elem.classList.remove('dragging');
+			draggingItem = null;
+		});
+	elem.addEventListener('dragover', function dragOver (e) {
+			e.preventDefault();
+			droppedItem = e.target.closest('.block-elem')
+			nextElement = (droppedItem === draggingItem.nextElementSibling) ? droppedItem.nextElementSibling: droppedItem
+		});
+}
+const addListenerToCont = (cont) => {
+	cont.addEventListener('dragover', function dragOverCont (e) {
+			e.preventDefault();			
+		});
+	cont.addEventListener('dragenter', function dragEnter (e) {
+		e.preventDefault();			
+	});
+	cont.addEventListener('drop', function dragDrop (e){
+		cont.insertBefore(draggingItem, nextElement)
+	});		
+
+}
+
+let draggingItem = null;
+let droppedItem = null;
+let nextElement = null;
+const dragAndDrop = () => {
+	draggables = document.querySelectorAll('.block-elem');
+	containers = document.querySelectorAll('.btn-of-block');
+
+		draggables.forEach( draggable => {
+			draggable.addEventListener('dragstart', dragStart);
+			draggable.addEventListener('dragend', dragEnd);
+			draggable.addEventListener('dragover', dragOver);
+			
+		});
+	
+	
+	function dragStart (e){
+		draggingItem = this
+		this.classList.add('dragging');
+	};
+	function dragEnd (e){
+		this.classList.remove('dragging');
+		draggingItem = null;
+	};
+	function dragOver (e) {
+		e.preventDefault();
+		droppedItem = e.target.closest('.block-elem')
+		nextElement = (droppedItem === draggingItem.nextElementSibling) ? droppedItem.nextElementSibling: droppedItem
+	};
+
+
+	containers.forEach(container => {
+		container.addEventListener('dragover', dragOverCont)
+		container.addEventListener('dragenter', dragEnter)
+		container.addEventListener('drop', function dragDrop (e){
+			container.insertBefore(draggingItem, nextElement)
+		});	
+	})
+	function dragOverCont (e) {
+		e.preventDefault();			
+	}
+	function dragEnter (e) {
+		e.preventDefault();			
+	}
+	function dragDrop (e){
+		this.insertBefore(draggingItem, nextElement)
+	}
+};
+
+
+
 
 
   //electron-builder --mac

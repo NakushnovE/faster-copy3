@@ -2,15 +2,17 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   margin: auto;
-  background-color: rgb(57, 64, 67);
+  background-color: rgb(59, 83, 91);
+  /* background-color: rgb(51, 100, 117); */
+  
 }
 
 input {
   background: transparent;
 }
 button {
-  background-color: rgb(60, 60, 60);
-  color: rgb(148, 148, 148);
+  background-color: rgb(83, 83, 83);
+  color: rgb(192, 192, 192);
   border: 1px solid black;
   border-radius: 5px;
   user-select: none;
@@ -22,20 +24,110 @@ button:active {
   margin: 10px;
 }
 
+.switch-edit-btn {
+  display: inline-block;
+  position: absolute;
+  right:0;
+  top: 0;
+  width: 34px;
+  height: 18px;
+  margin: 2px 1px 0 0;
+  cursor: pointer;
+}
+.switch-input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border: .5px solid rgb(36, 36, 36);
+  border-radius: 18px;
+  background-color: rgba(140, 37, 37, 0.361);
+  transition: .4s;
+  
+}
+.switch-slider::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  content: "";
+  position: absolute;
+  
+  left: 16px;
+  top: 0;
+  bottom: 1px;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  outline: .5px solid rgb(36, 36, 36);
+  background-color: rgb(59, 83, 91);
+  transition: .4s;
+  z-index: 100;
+}
+
+.switch-input:focus + .switch-slider {
+  box-shadow: 0 0 1px black;
+}
+.switch-input:checked + .switch-slider {
+  background-color: rgb(47, 109, 86);
+}
+.switch-input:checked + .switch-slider::before {
+  transform: translateX(-16px);
+  -webkit-transform: translateX(-16px);
+  -ms-transform: translateX(-16px);
+}
+label svg {
+  position: absolute;
+  width: 30px;
+  height: 14px;
+  top: 1px;
+}
+label svg.unlock {
+  width: 15px;
+  left: 16px;
+}
+label svg.lock {
+  width: 15px;
+  left: 1.5px;
+}
+
 .add-btn {
   display: flex;
   margin-top: 10px;
+  background: url(./src/icon/add_btn.png) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-color: rgb(67, 79, 85);;
 }
-.btn {
-  margin: 1px;
+.add-btn:active {
+  background-color: rgba(71, 165, 42, 0.252);
 }
 
+.btn {
+  margin: 2px;
+  background-color: rgb(75, 86, 90);
+}
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
 .hide {
   display: none;
 }
 
 .tittle-block {
   display: flex;
+  height: 1.2em;
 }
 .name-block {
   font-size: 1em;
@@ -64,16 +156,16 @@ button:active {
   width: 100px;
   margin-bottom: 3px;
 }
+
 .options-block {
   padding: 4px;
   width: 200px;
   position: absolute;
-
-
   border: 1px solid black;
   border-radius: 5px;
   z-index: 100;
   background-color: rgb(73, 84, 80);
+
 }
 .options-block input {
   width: 193px;
@@ -86,27 +178,103 @@ button:active {
 .selected {
   background-color: rgb(42, 41, 41);
 }
-.flex {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 .btn-add-block {
   margin-left: 10px;
+  background-color: rgb(67, 79, 85);
+  color: rgb(0, 0, 0);
+}
+.btn-add-block:active {
+  margin-left: 10px;
+  background-color: rgba(71, 165, 42, 0.252);
+  color: rgb(0, 0, 0);
 }
 .name-block:active {
   color:rgb(197, 72, 72);
 } 
-/* .btn-of-block {
-  white-space: nowrap;
-} */
+
 .editor-enable-btn {
   position:absolute;
   right:0;
-  top:0;
+  top:40px;
   z-index: 100;
 }
 
 .wrapper-name-block {
-  border-bottom: 1px solid rgb(31, 14, 14);
+  width: auto;
   margin: 0px 3px;
+
+  position: relative;
+}
+.name-block-input { 
+  position: absolute;
+  
+}
+.name-block {
+  width: auto;
+
+}
+.hide-edit-name-block {
+  display: none;
+}
+
+.h {
+}
+.btn-has-options-open {
+  background: radial-gradient(rgb(187, 255, 0), rgba(255, 7, 7, 0.011) 50%, transparent);
+  background-repeat: no-repeat;
+  background-position: -100vw -75vh;
+  background-size: 300vw 100vh;
+}
+.dragging {
+  background: radial-gradient(rgb(187, 255, 0), rgba(255, 7, 7, 0.011) 50%, transparent);
+  background-repeat: no-repeat;
+  background-position: -100vw -75vh;
+  background-size: 300vw 100vh;
+}
+.btn-edit-name-block {
+  background: url(./src/icon/pencilsvg.svg) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+.btn-edit-name-block:active {
+  background: url(./src/icon/pensilsvg_red.svg) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+.btn-display-block {
+  background: url(./src/icon/displaysvg.svg) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+.btn-display-block:active {
+  background: url(./src/icon/displaysvg_red.svg) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+.btn-delete-block {
+  background: url(./src/icon/deletesvg.svg) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+.btn-delete-block:active {
+  background: url(./src/icon/deletesvg_red.svg) 50% 50% no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+.del {
+  background: url(./src/icon/deletesvg_red.svg) 50% 50% no-repeat;
+  background-size: contain;
 }

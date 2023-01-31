@@ -7,12 +7,12 @@ const Store = require('electron-store');
 const store = new Store();
 
 let mainWindow;
-//let wc;
+
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 500,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -25,16 +25,10 @@ const createWindow = () => {
 
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  // mainWindow.loadURL(
-  //   url.format({
-  //     pathname: path.join(__dirname, '/src/index.html'),
-  //     protocol: "file:",
-  //     slashes: true
-  //   })
-  // );
+
 
   mainWindow.setMenu(null);
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   let block = store.get('block');
 
@@ -54,50 +48,10 @@ app.on('activate', () => {
   }
 });
 
-// app.on('window-all-closed', () => {
-//   // On macOS it is common for applications and their menu bar
-//   // to stay active until the user quits explicitly with Cmd + Q
-//   if (process.platform !== 'darwin') {
-//     app.quit();
-//   }
-// });
 
-// Сохранение страницы
-// app.on('web-contents-created', (_, wc) => {
-// console.log("BOT WC", wc);
-//   wc.on('dom-ready', () => {
-//     wc.on('console-message', () => { 
-//       let count = 0;
-//         const filepathlocal = path.join(__dirname, 'src/index.html');
-//           wc.savePage(filepathlocal, 'HTMLOnly').then(()=> {
-//             console.log('save page');         
-//           }).catch(err => {
-//             console.log(err);
-//             console.log("Не удалось сохранить файл");
-//           })     
-//     })
-//   })    
-// });
-
-
-// app.on('web-contents-created', (_, wc) => {
-//   ipcMain.on("save-page", (_, data) => {
-//     const filepathlocal = path.join(__dirname, '1/index.html');
-//     console.log("MAIN", data);
-  
-//     wc.savePage(filepathlocal, 'HTMLOnly').then(()=> {
-//       console.log('save page');         
-//     }).catch(err => {
-//       console.log(err);
-//       console.log("Не удалось сохранить файл");
-//     })
-  
-//   })
-// })
-
-//console.log(store.get('block'));
 
 ipcMain.on("save-store", (_, data) => {
   store.set('block', data)
   console.log('MAIN: block saved');
 })
+

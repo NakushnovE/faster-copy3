@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0072)file:///Users/evg/Documents/Projects/JS/FastCopy/faster-copy3/index.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,11 +6,19 @@
     <title>Hello World!</title>
     <link rel="stylesheet" type="text/css" href="./index.css" media="screen">
   </head>
-  <body>
+  <body id="body">
 
-    <div class="block-edit-btn">
-      <button class="editor-enable-btn" onclick="changeSwitcher()">Edit</button>
-    </div>
+    <label class="switch-edit-btn">
+      <input type="checkbox" class="switch-input" onclick="changeSwitcher()" />
+      <span class="switch-slider"></span>
+      <svg  class="lock" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">      
+        <path d="M12.25,7H12V4c0-1.653-1.347-3-3-3H7C5.347,1,4,2.347,4,4v3H3.75C3.338,7,3,7.338,3,7.75v6.5C3,14.663,3.338,15,3.75,15h8.5 c0.413,0,0.75-0.337,0.75-0.75v-6.5C13,7.338,12.663,7,12.25,7z M6,4c0-0.55,0.45-1,1-1h2c0.55,0,1,0.45,1,1v3H6V4z" />
+      </svg>
+      <svg class="unlock" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <rect width="16" height="16" id="icon-bound" fill="none" />
+        <path d="M12.25,7H12V4c0-1.653-1.347-3-3-3H7C5.347,1,4,2.347,4,4v1h2V4c0-0.55,0.45-1,1-1h2c0.55,0,1,0.45,1,1v3H3.75 C3.338,7,3,7.338,3,7.75v6.5C3,14.662,3.338,15,3.75,15h8.5c0.412,0,0.75-0.338,0.75-0.75v-6.5C13,7.338,12.662,7,12.25,7z" />
+      </svg>
+    </label>
     <div id="listBtn">   
     
 
