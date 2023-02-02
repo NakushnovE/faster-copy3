@@ -1,6 +1,6 @@
 {
-  "name": "faster-copy3",
-  "productName": "faster-copy3",
+  "name": "Copypaster",
+  "productName": "Copypaster",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "main.js",
@@ -20,7 +20,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "faster_copy3"
+            "name": "Copypaster"
           }
         },
         {

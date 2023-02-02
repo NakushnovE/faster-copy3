@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const Config = require('electron-config');
 const path = require('path');
 const Store = require('electron-store');
