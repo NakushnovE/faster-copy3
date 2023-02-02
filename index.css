@@ -3,10 +3,11 @@ body {
     Arial, sans-serif;
   margin: auto;
   background-color: rgb(59, 83, 91);
-  /* background-color: rgb(51, 100, 117); */
   
 }
-
+::-webkit-input-placeholder {
+  color: rgba(254, 248, 235, 0.273)
+}
 input {
   background: transparent;
 }
@@ -164,7 +165,7 @@ label svg.lock {
   border: 1px solid black;
   border-radius: 5px;
   z-index: 100;
-  background-color: rgb(73, 84, 80);
+  background-color: rgb(89, 123, 127);
 
 }
 .options-block input {
@@ -221,16 +222,16 @@ label svg.lock {
 .h {
 }
 .btn-has-options-open {
-  background: radial-gradient(rgb(187, 255, 0), rgba(255, 7, 7, 0.011) 50%, transparent);
+  background: rgb(89, 123, 127);
   background-repeat: no-repeat;
   background-position: -100vw -75vh;
   background-size: 300vw 100vh;
 }
 .dragging {
-  background: radial-gradient(rgb(187, 255, 0), rgba(255, 7, 7, 0.011) 50%, transparent);
   background-repeat: no-repeat;
   background-position: -100vw -75vh;
   background-size: 300vw 100vh;
+  border-radius: 5px;
 }
 .btn-edit-name-block {
   background: url(./src/icon/pencilsvg.svg) 50% 50% no-repeat;
@@ -278,3 +279,4 @@ label svg.lock {
   background: url(./src/icon/deletesvg_red.svg) 50% 50% no-repeat;
   background-size: contain;
 }
+

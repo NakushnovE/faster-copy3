@@ -488,7 +488,8 @@ const addListenerToCont = (cont) => {
 		e.preventDefault();			
 	});
 	cont.addEventListener('drop', function dragDrop (e){
-		cont.insertBefore(draggingItem, nextElement)
+		cont.insertBefore(draggingItem, nextElement);
+		saveStore();
 	});		
 
 }
@@ -527,7 +528,8 @@ const dragAndDrop = () => {
 		container.addEventListener('dragover', dragOverCont)
 		container.addEventListener('dragenter', dragEnter)
 		container.addEventListener('drop', function dragDrop (e){
-			container.insertBefore(draggingItem, nextElement)
+			container.insertBefore(draggingItem, nextElement);
+			saveStore();
 		});	
 	})
 	function dragOverCont (e) {
@@ -535,9 +537,6 @@ const dragAndDrop = () => {
 	}
 	function dragEnter (e) {
 		e.preventDefault();			
-	}
-	function dragDrop (e){
-		this.insertBefore(draggingItem, nextElement)
 	}
 };
 

@@ -1,18 +1,24 @@
-const { log } = require('console');
 const { app, BrowserWindow, ipcMain, webContents } = require('electron');
+const Config = require('electron-config');
 const path = require('path');
-const url = require('url')
 const Store = require('electron-store');
-
+const config = new Config();
 const store = new Store();
 
 let mainWindow;
 
 
 const createWindow = () => {
+  const size = config.get('winBounds');
+  const w = size.width;
+  const h = size.height;
+  const x = size.x;
+  const y = size.y;
   mainWindow = new BrowserWindow({
-    width: 400,
-    height: 500,
+    width: w?w:400,
+    height: h?h:500,
+    x: x,
+    y: y,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -36,6 +42,10 @@ const createWindow = () => {
     mainWindow.webContents.send('load-store', block)
   })
 
+  mainWindow.on('close', () => {
+    config.set('winBounds', mainWindow.getBounds())
+  })
+
 };
 
 
@@ -48,10 +58,8 @@ app.on('activate', () => {
   }
 });
 
-
-
 ipcMain.on("save-store", (_, data) => {
   store.set('block', data)
   console.log('MAIN: block saved');
-})
+});
 
