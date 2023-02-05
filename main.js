@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const Config = require('electron-config');
 const path = require('path');
 const Store = require('electron-store');
+const { log } = require('console');
 const config = new Config();
 const store = new Store();
 
@@ -10,15 +11,18 @@ let mainWindow;
 
 const createWindow = () => {
   const size = config.get('winBounds');
-  const w = size.width;
-  const h = size.height;
-  const x = size.x;
-  const y = size.y;
+  console.log(size);
+  let w = size.width;
+  let h = size.height;
+  let x = size.x;
+  let y = size.y;
+
+  
   mainWindow = new BrowserWindow({
     width: w?w:400,
     height: h?h:500,
-    x: x,
-    y: y,
+    x: x?x:1000,
+    y: y?y:250,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
