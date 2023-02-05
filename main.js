@@ -11,18 +11,22 @@ let mainWindow;
 
 const createWindow = () => {
   const size = config.get('winBounds');
-  console.log(size);
-  let w = size.width;
-  let h = size.height;
-  let x = size.x;
-  let y = size.y;
-
+  let w = 400;
+  let h = 500;
+  let x = 1000;
+  let y = 250;
+  if(size) {
+    w = size.width;
+    h = size.height;
+    x = size.x;
+    y = size.y;
+  }
   
   mainWindow = new BrowserWindow({
-    width: w?w:400,
-    height: h?h:500,
-    x: x?x:1000,
-    y: y?y:250,
+    width: w,
+    height: h,
+    x: x,
+    y: y,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
