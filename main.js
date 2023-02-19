@@ -66,6 +66,12 @@ app.on('activate', () => {
   }
 });
 
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
 ipcMain.on("save-store", (_, data) => {
   store.set('block', data)
   console.log('MAIN: block saved');

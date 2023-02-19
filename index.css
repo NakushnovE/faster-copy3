@@ -8,9 +8,43 @@ body {
 ::-webkit-input-placeholder {
   color: rgba(254, 248, 235, 0.273)
 }
+
 input {
   background: transparent;
 }
+
+.btns-move {
+  display: block;
+  width: 10px;
+  height: 20px;
+  margin: 0 1px 0 -7px;
+}
+.btns-move button{
+  display: block;
+  width: 5px;
+  height: 10px;
+  border-radius: 0;
+  border: none;
+}
+
+.btn-move-down {
+  background: url(./src/icon/arrow_down.svg) 50% 50% no-repeat;
+  background-size: contain;
+}
+.btn-move-down:active {
+  background: url(./src/icon/arrow_down_red.svg) 50% 50% no-repeat;
+  background-size: contain;
+}
+.btn-move-up {
+  background: url(./src/icon/arrow_up.svg) 50% 50% no-repeat;
+  background-size: contain;
+}
+.btn-move-up:active {
+  background: url(./src/icon/arrow_up_red.svg) 50% 50% no-repeat;
+  background-size: contain;
+}
+
+
 button {
   background-color: rgb(83, 83, 83);
   color: rgb(192, 192, 192);
@@ -203,7 +237,7 @@ label svg.lock {
 
 .wrapper-name-block {
   width: auto;
-  margin: 0px 3px;
+  margin: 0px 1px;
 
   position: relative;
 }
@@ -279,4 +313,5 @@ label svg.lock {
   background: url(./src/icon/deletesvg_red.svg) 50% 50% no-repeat;
   background-size: contain;
 }
+
 

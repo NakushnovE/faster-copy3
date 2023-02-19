@@ -5,7 +5,10 @@
   "description": "My Electron application description",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "start-forge": "electron-forge start",
+    "make": "electron-forge make",
+    "dist:win": "electron-builder --windows"
   },
   "keywords": [],
   "author": {
@@ -41,12 +44,13 @@
     }
   },
   "dependencies": {
-    "clipboard": "^2.0.11",
+    "clipboard": "^2.0.11",  
     "electron-config": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0"
   },
   "devDependencies": {
+    "electron-builder": "^23.6.0",
     "@electron-forge/cli": "^6.0.0-beta.67",
     "@electron-forge/maker-deb": "^6.0.0-beta.67",
     "@electron-forge/maker-rpm": "^6.0.0-beta.67",

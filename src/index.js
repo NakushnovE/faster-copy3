@@ -35,12 +35,27 @@ const newBlock = () => {
 	let newBlock = document.createElement('div');
 	newBlock.classList.add('block');
 
+	
+
 	let tittleBlock = newBlock.appendChild(document.createElement('div'));
 	tittleBlock.classList.add('tittle-block');
+
+	let btnsMove = tittleBlock.appendChild(document.createElement('div'));
+	btnsMove.classList.add('btns-move');
+	let btnUp = btnsMove.appendChild(document.createElement('button'));
+	btnUp.classList.add('btn-move-up');
+	btnUp.setAttribute('onClick', 'moveBlockUp(this)')
+	let btnDown = btnsMove.appendChild(document.createElement('button'));
+	btnDown.classList.add('btn-move-down');
+	btnDown.setAttribute('onClick', 'moveBlockDown(this)')
+	
 
 	
 	let wrapperNameBlock = tittleBlock.appendChild(document.createElement('div'));
 	wrapperNameBlock.classList.add('wrapper-name-block');
+
+
+	
 	let nameBlockInput = wrapperNameBlock.appendChild(document.createElement('input'));
 	nameBlockInput.classList.add('name-block-input');
 	nameBlockInput.classList.add('hide-edit-name-block');
@@ -411,6 +426,7 @@ const changeSwitcher = () => {
 	const btnsEditNameBlock = document.querySelectorAll('.btn-edit-name-block');
 	const btsAddBlock = document.querySelector('.btn-add-block');
 	const btnOfBlock = document.querySelectorAll('.btn-of-block.h');
+	const btnsMove = document.querySelectorAll('.btns-move');
 
 	if(switchEditor) {
 		btnsAddBtn.forEach((btn) => {
@@ -427,7 +443,10 @@ const changeSwitcher = () => {
 		});
 		btnOfBlock.forEach(btn => {
 			btn.classList.remove('hide');
-		})
+		});
+		btnsMove.forEach(btn => {
+			btn.classList.remove('hide');
+		});
 		btsAddBlock.classList.remove('hide');
 
 	} else {
@@ -445,7 +464,10 @@ const changeSwitcher = () => {
 		});
 		btnOfBlock.forEach(btn => {
 			btn.classList.add('hide');
-		})
+		});
+		btnsMove.forEach(btn => {
+			btn.classList.add('hide');
+		});
 
 		btsAddBlock.classList.add('hide');
 
@@ -458,7 +480,9 @@ const changeSwitcher = () => {
   ipcRenderer.on('load-store', (_, data) => {
 	console.log('LOAD');
 	let body = document.getElementById('body');
-	body.innerHTML = data;
+	if(data) {
+		body.innerHTML = data;
+	}	
 	dragAndDrop();
 	changeSwitcher();
 })
@@ -540,8 +564,20 @@ const dragAndDrop = () => {
 	}
 };
 
-
-
+const moveBlockUp = (target) => {
+	const block = target.closest('.block');
+	const prevBlock = block.previousSibling;
+	if(prevBlock) {
+		block.after(prevBlock);
+	}
+}
+const moveBlockDown = (target) => {
+	const block = target.closest('.block');
+	const nextBlock = block.nextSibling;
+	if(nextBlock) {
+		block.before(nextBlock);
+	}
+}
 
 
   //electron-builder --mac
