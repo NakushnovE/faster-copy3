@@ -118,7 +118,7 @@ function createElement(parent) {
 	let inputNameBtn = optionsBlock.appendChild(document.createElement('input'));
 	inputNameBtn.classList.add('input-name-btn')
 	inputNameBtn.setAttribute("placeholder", "Name button");
-	
+	inputNameBtn.setAttribute("value", "");
 	
 	btn.classList.add('btn');
     btn.setAttribute("onClick", "copyText('text in the clipboard')");
@@ -229,6 +229,8 @@ const openOptions = (target) => {
 		let optionsBlock = blockElem.querySelector('.options-block');	
 		allOptionsBlock.forEach( btn => {
 			if(btn == optionsBlock) {
+				// let parent = btn.previousSibling
+				// console.log(parent);
 				btn.classList.remove('hide');
 				target.classList.add('btn-has-options-open');
 			} else if(!btn.classList.contains('hide') && btn != optionsBlock) {
@@ -258,17 +260,20 @@ document.addEventListener('contextmenu', e => {
 
 const saveOptionsBtn = (target) => {
 	let optionsBlock = target.closest('.options-block');
-	let inputNameBtn = optionsBlock.querySelector('.input-name-btn').value;
-	let inputOptionsBtn = optionsBlock.querySelector('.option').value;
+	let inputNameBtn = optionsBlock.querySelector('.input-name-btn');
+	let inputOptionsBtn = optionsBlock.querySelector('.option');
 	let selectedFunction = optionsBlock.querySelector('.selected');	
 	let btn = optionsBlock.previousSibling;
 	if(inputNameBtn !== "" && inputOptionsBtn !== "") {
-		btn.innerText = inputNameBtn;
+		btn.innerText = inputNameBtn.value;
+		inputNameBtn.setAttribute('value', inputNameBtn.value);
 		if(selectedFunction.classList.contains('btn-select-copy')) {
-			btn.setAttribute("onClick", `copyText("${inputOptionsBtn}")`);
+			btn.setAttribute("onClick", `copyText("${inputOptionsBtn.value}")`);
+			inputOptionsBtn.setAttribute('value', inputOptionsBtn.value);
 		}
 		if(selectedFunction.classList.contains('btn-select-link')) {
-			btn.setAttribute("onClick", `link("${inputOptionsBtn}")`)
+			btn.setAttribute("onClick", `link("${inputOptionsBtn.value}")`);
+			inputOptionsBtn.setAttribute('value', inputOptionsBtn.value);
 		}
 	}
 	closeOptions();
