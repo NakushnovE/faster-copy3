@@ -207,9 +207,7 @@ label svg.lock {
   display: block;
   margin: 2px 0px;
 }
-.block {
-  margin-bottom: 15px;
-}
+
 .selected {
   background-color: rgb(42, 41, 41);
 }
@@ -224,9 +222,13 @@ label svg.lock {
   background-color: rgba(71, 165, 42, 0.252);
   color: rgb(0, 0, 0);
 }
+.name-block:hover {
+  color:rgba(91, 197, 72, 0.445);
+}
 .name-block:active {
   color:rgb(197, 72, 72);
 } 
+
 
 .editor-enable-btn {
   position:absolute;
